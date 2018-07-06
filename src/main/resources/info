@@ -9,3 +9,74 @@ https://docs.cucumber.io/guides/10-minute-tutorial/
 https://en.wikipedia.org/wiki/Cucumber_(software)
 
 Install IDEA plugin: Cucumber for Java
+
+https://www.youtube.com/watch?v=tX3V90K8VIU
+Approach
+    1. Create Javadoc before each Step definition methods.
+    2. Create template of steps.
+    3. Name of parameter must not be a variable.
+    4. Use cucumber plugins for reporting.
+    5. Very carefully think through the architecture of your test system (What? Where? Why? How?)
+
+Best Practice
+
+    Test Step Creation.
+        Crate template of steps:
+            WHEN:
+            1. I set the ... key as "123"
+            2. I send request to ... Geo City
+            3. I add ... the ip "127.0.0.1"
+
+            THEN:
+            1. I get ... http status as "200"
+            2. the report should contain ... country "USA"
+            3. the values of the ...
+
+        Organizing the Code
+            1. Separating the Support Code
+            2. Favorite way to organize step definition files is to organize them with one file per domain entity:
+                GeoCityStepDef.class, GeoCountryStepDef.class
+            3. By default Cucumber find StepDef classes in the same package as *.feature files.
+
+        Use cucumber plugins for reporting.
+            com.github.kirlionik.cucumberallure.AllureReporter
+
+            @CucumberOption(
+                strict=true,
+                plugin={
+                    "com.github.kirlionik.cucumberallure.AllureReporter",
+                    "pretty", "json:target/Cucumber.json",
+                    "html:target/cucumber-html-report"
+                }
+            )
+
+            You can:
+                1. Define Severity of each scenario
+                2. Create link to issue.
+                3. Link to user-story.
+                4. Create attachments.
+                5. Other All Core features ...
+
+
+    Feel free to use parallel mode for test execution.
+    For example. How to:
+        1. Create several "runner" classes with name "*ParallelIT.class"
+        2. Define tags of features in each "runner" class. You shouldn't have the same tags in different "runner classes."
+        3. Add profile into pom.xml file:
+            <profile>
+                <id>parallel</id>
+                <junit.threadCount>4</junit.threadCount>
+                <junit.parallel>classes</junit.parallel>
+                <run.classes>**/*ParallelIT.class</run.classes>
+            </profile>
+
+        4. Add parameters in Configuration section of "maven-failsafe-plugin":
+            <reuseForks>false</reuseForks>
+            <forkCount>20</forkCount>
+            <threadCount>${junit.threadCount}</threadCount>
+            <parallel>${junit.parallel}</parallel>
+
+        5. For execute tests run command:
+            mvn clean install -Pparallel
+
+    You can transfer to Java StepDef method complex objects.
