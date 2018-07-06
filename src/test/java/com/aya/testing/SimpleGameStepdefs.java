@@ -11,21 +11,21 @@ import org.junit.jupiter.api.Assertions;
  */
 public class SimpleGameStepdefs {
 
-    SimpleGame simpleGame;
-    String result;
+    private SimpleGame simpleGame;
+    private String result;
 
     @Given("^Create a game play$")
-    public void createAGamePlay() throws Throwable {
+    public void createAGamePlay() {
         simpleGame = new SimpleGame();
     }
 
     @When("^I play with number (\\d+)$")
-    public void iPlayWithNumber(int number) throws Throwable {
+    public void iPlayWithNumber(int number) {
         result = simpleGame.play(number);
     }
 
     @Then("^The result is \"([^\"]*)\"$")
-    public void theResultIs(String resultString) throws Throwable {
+    public void theResultIs(String resultString) {
         Assertions.assertEquals(result, resultString);
     }
 }
